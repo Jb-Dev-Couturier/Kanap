@@ -148,6 +148,7 @@ main {
 	padding-top: 25px;
 	width: 100%;
 	border-radius: 10px;
+	
 }
 .items article img {
 	width: 160px;
@@ -168,15 +169,11 @@ main {
 	box-sizing: border-box;
 	overflow: hidden;
 	text-overflow: ellipsis;
-
 	display: -webkit-box;
 	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
 	white-space: normal;
 }
-
-
-
 
 /********/
 /*Footer*/
