@@ -107,7 +107,8 @@ const addKanap = () => {
             (produitStorage[i].quantite = quantitéProduit),
             console.log('quantite++'),
             localStorage.setItem('produit', JSON.stringify(produitStorage)),
-            (produitStorage = JSON.parse(localStorage.getItem('produit')))
+            (produitStorage = JSON.parse(localStorage.getItem('produit'))),
+            alert('Changement du nombre de produit')
           );
         }
       }
@@ -122,7 +123,8 @@ const addKanap = () => {
             console.log('nouveau'),
             produitStorage.push(fusionProduitColor),
             localStorage.setItem('produit', JSON.stringify(produitStorage)),
-            (produitStorage = JSON.parse(localStorage.getItem('produit')))
+            (produitStorage = JSON.parse(localStorage.getItem('produit'))),
+            alert('Nouveau Produit ajouté aux panier')
           );
         }
       }
