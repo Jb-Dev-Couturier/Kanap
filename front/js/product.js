@@ -14,4 +14,36 @@ const fetchProduit = async () => {
     });
 };
 
-fetchProduit();
+//afficher le produit en inner html
+
+const produitDisplay = async () => {
+  await fetchProduit();
+
+  const imageAlt = document.querySelector('article div.item__img');
+  const titre = document.querySelector('#title');
+  const prix = document.querySelector('#price');
+  const description = document.querySelector('#description');
+  const couleurOption = document.querySelector('#colors');
+
+  imageAlt.innerHTML = `<img src="${produitData.imageUrl}" alt="${produitData.altTxt}">`;
+  titre.textContent = `${produitData.name}`;
+  prix.textContent = `${produitData.price}`;
+  description.textContent = `${produitData.description}`;
+
+  //pour le choix des couleurs
+  let select = document.getElementById('colors')
+  
+
+  //recupere les different couleur disponible
+  produitData.colors.forEach((color)=>{
+    //cree un element option dans liste de selection
+    let tagOption = document.createElement('option');
+    //Injecte les valeur dans la variable tag option
+    tagOption.innerHTML =`${color}`
+    tagOption.value = `${color}`;
+    //tagOption devient un enfant de select pour afficher les couleur disponible
+    select.appendChild(tagOption)
+  })
+};
+
+produitDisplay();
