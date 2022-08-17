@@ -21,9 +21,9 @@ const kanapDisplay = async () => {
   await fetchKanap();
     //recupere la div pour creation element kanap
     //Creation boucle en fonction du nombre article en BD et recuperation des argument 
-    document.getElementById('items').innerHTML = KanapsData.map(
+    document.getElementById('items').innerHTML += KanapsData.map(
       (kanap) =>
-        `<a href="./product.html${kanap._id}">
+        `<a href="./product.html?_id=${kanap._id}">
                 <article>
                 <img src=${kanap.imageUrl} alt=${kanap.altTxt}>
                 <h3 class="productName">${kanap.name}</h3>
@@ -31,7 +31,7 @@ const kanapDisplay = async () => {
                 <p class="productDescription">${kanap.description}</p>
                 </article>
             </a>`
-    ).join()
+    ).join('');
 
 };
 
