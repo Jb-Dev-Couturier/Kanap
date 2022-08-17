@@ -23,13 +23,13 @@ const produitDisplay = async () => {
   const titre = document.querySelector('#title');
   const prix = document.querySelector('#price');
   const description = document.querySelector('#description');
-  const couleurOption = document.querySelector('#colors');
-
+  const button = document.querySelector('article div.item__content__addButton');
   imageAlt.innerHTML = `<img src="${produitData.imageUrl}" alt="${produitData.altTxt}">`;
   titre.textContent = `${produitData.name}`;
   prix.textContent = `${produitData.price}`;
   description.textContent = `${produitData.description}`;
-
+  button.innerHTML = `<button id="${produitData._id}" >Ajouter au panier</button>`;
+  
   //pour le choix des couleurs
   let select = document.getElementById('colors')
   
@@ -44,6 +44,42 @@ const produitDisplay = async () => {
     //tagOption devient un enfant de select pour afficher les couleur disponible
     select.appendChild(tagOption)
   })
+  addKanap(produitData)
 };
 
 produitDisplay();
+
+
+//add produit aux local storage
+const addKanap = ()=>{
+    //cible boutton 'ajouter au panier'
+    let bouton = document.getElementById(produitData._id);
+    //ecoute du click
+    bouton.addEventListener('click', ()=>{
+        //variable avec contenu du local storage
+        let produitStorage = JSON.parse(localStorage.getItem('produit'));
+        //a l'ecoute cible color et quantity
+        let select = document.getElementById('colors' );
+        let quantity = document.getElementById('quantity');
+        console.log(select);
+        console.log(quantity)
+        
+        //ajoutez un objet  couleur et quantité a produitdata
+        const fusionProduitColor = Object.assign({}, produitData, {
+          colorsChoisi: `${select.value}`,
+          quantite: `${quantity.value}`,
+        });
+        console.log(fusionProduitColor);
+
+        //condition pour creer le storage (premiere fois)
+        if (produitStorage == null) {
+          produitStorage = [];
+          //envoie les info produit au local storage
+          produitStorage.push(fusionProduitColor);
+          console.log(produitStorage);
+          //ajout des donnes au local storage
+          localStorage.setItem('produit', JSON.stringify(produitStorage));
+          alert('Produit ajouté aux panier')
+        }
+    })
+}
