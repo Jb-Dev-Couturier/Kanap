@@ -9,10 +9,17 @@ const fetchProduit = async () => {
   await fetch(`http://localhost:3000/api/products/${produit}`)
     //renvoi reponse en promise traite en json
     .then((res) => res.json())
-    .then((promise) => {
-      produitData = promise;
+    .then((objetProduits) => {
+      // execution de la fontion lesProduits
+      lesProduits(objetProduits);
+    })
+    .catch((err) => {
+      document.querySelector('.item').innerHTML = '<h1>erreur 404</h1>';
+      console.log('erreur 404, sur ressource api: ' + err);
     });
-};
+};;
+
+
 
 //afficher le produit en inner html
 
@@ -31,19 +38,25 @@ const produitDisplay = async () => {
   description.textContent = `${produitData.description}`;
 
   //pour le choix des couleurs
-  let select = document.getElementById('colors')
-  
+  let select = document.getElementById('colors');
 
   //recupere les different couleur disponible
-  produitData.colors.forEach((color)=>{
+  produitData.colors.forEach((color) => {
     //cree un element option dans liste de selection
     let tagOption = document.createElement('option');
     //Injecte les valeur dans la variable tag option
-    tagOption.innerHTML =`${color}`
+    tagOption.innerHTML = `${color}`;
     tagOption.value = `${color}`;
     //tagOption devient un enfant de select pour afficher les couleur disponible
-    select.appendChild(tagOption)
-  })
+    select.appendChild(tagOption);
+  });
+  addKanap(produitData)
 };
 
 produitDisplay();
+
+
+//ajout local storage
+const addKanap= ()=>{
+let bouton = document.getElementById(produitData._id);
+}
