@@ -36,15 +36,15 @@ const panierDisplay = async () => {
     </article> `
       )
       .join('');
+      modifQuantité();
+      removeProduct();
+      totalProduit();
   } else {
     //si panier vide
     document.querySelector('h1').innerHTML =
       "Vous n'avez pas d'article dans votre panier";
   }
   // reste à l'écoute grâce aux fonctions suivantes pour modifier l'affichage
-  modifQuantité();
-  removeProduct();
-  totalProduit();
 };
 panierDisplay();
 
@@ -83,22 +83,24 @@ const removeProduct = async (panierDisplay) => {
 
   itemDeleted.forEach((corbeille) => {
     corbeille.addEventListener('click', () => {
-      let totalAddProduitRemove = addProduit.length;
-      if (totalAddProduitRemove == 1) {
-        return (
-          localStorage.removeItem('produit'),
-          (location.href = 'cart.html'),
-          alert('Article supprimer du panier')
-        );
-      } else {
-        someProduct = addProduit.filter((el) => {
-          if (
-            corbeille.dataset.id != el._id ||
-            corbeille.dataset.color != el.colorsChoisi
-          ) {
-            return true;
-          }
-        });
+      if (window.confirm('Voulez vous supprimer cet article?')) {
+        
+        let totalAddProduitRemove = addProduit.length;
+        if (totalAddProduitRemove == 1) {
+          return (
+            localStorage.removeItem('produit'),
+            (location.href = 'cart.html')
+          );
+        } else {
+          someProduct = addProduit.filter((el) => {
+            if (
+              corbeille.dataset.id != el._id ||
+              corbeille.dataset.color != el.colorsChoisi
+            ) {
+              return true;
+            }
+          });
+      }
         localStorage.setItem('produit', JSON.stringify(someProduct));
         totalProduit()((location.href = 'cart.html'));
       }
