@@ -12,30 +12,27 @@ const panierDisplay = async () => {
 
     cart.innerHTML = addProduit.map(
       (produit) => `
-    <article class="cart__item" data-id="${produit._id}" data-color="${produit.colorsChoisi}" data-quantite="${produit.quantite}" data-prix="${produit.prix}">
-    <div class="cart__item__img">
-    <img src=${produit.imageUrl} alt=${produit.altTxt}>
-    </div>
-    <div class="cart__item__content">
-    <div class="cart__item__content__description">
-    <h2>${produit.name}</h2>
-    <p>${produit.colorsChoisi}</p>
-    <p>${produit.price} €</p>
-    </div>
-    <div class="cart__item__content__settings">
-    <div class="cart__item__content__settings__quantity">
-    <p>Qté : </p>
-    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${produit.quantite}>
-    </div>
-    <div class="cart__item__content__settings__delete">
-    <p class="deleteItem">Supprimer</p>
-    </div>
-    </div>
+    <article class="cart__item" data-id="${produit._id}" data-color="${produit.colorsChoisi}" data-quantite="${produit.quantite}" data-prix="${produit.price}">
+        <div class="cart__item__img">
+            <img src=${produit.imageUrl} alt=${produit.altTxt}>
+        </div>
+        <div class="cart__item__content">
+                <div class="cart__item__content__description">
+                    <h2>${produit.name}</h2>
+                    <p>${produit.colorsChoisi}</p>
+                    <p>${produit.price} €</p>
                 </div>
-                </article>
-                
-                
-                `
+            <div class="cart__item__content__settings">
+                <div class="cart__item__content__settings__quantity">
+                    <p>Qté : </p>
+                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${produit.quantite}>
+                </div>
+                <div class="cart__item__content__settings__delete">
+                    <p class="deleteItem" data-id="${produit._id}" data-color="${produit.colorsChoisi}" data-quantite="${produit.quantite}">Supprimer</p>
+                </div>
+            </div>
+        </div>
+    </article> `
     );
   } else {
     //si panier vide
@@ -44,10 +41,9 @@ const panierDisplay = async () => {
   }
   // reste à l'écoute grâce aux fonctions suivantes pour modifier l'affichage
   modifQuantité();
+  totalProduit();
 };
 panierDisplay();
-
-
 
 // fonction modifQuantité, modifie dynamiquement les quantités du panier
 
@@ -71,18 +67,47 @@ function modifQuantité() {
           // on met à jour le dataset quantité
           cart.dataset.quantite = eq.target.value;
           // on joue la fonction pour actualiser les données
-          //totalProduit();
+          totalProduit();
         }
     });
   });
 }
 
-// fonction supression on supprime un article dynamiquement du panier et donc de l'affichage
 
-function suppression() {
-  // déclaration de variables
-  const cartdelete = document.querySelectorAll('.cart__item .deleteItem');
+// fonction supprimer un produit
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+// fonction ajout nombre total produit et coût total
+
+function totalProduit() {
+  // déclaration variable en tant que nombre
+  let totalArticle = 0;
+  // déclaration variable en tant que nombre
+  let totalPrix = 0;
+  // on pointe l'élément
+  const cart = document.querySelectorAll('.cart__item');
+  // pour chaque élément cart
+  cart.forEach((cart) => {
+    //récupère les quantités des produits grâce au dataset
+    totalArticle += JSON.parse(cart.dataset.quantite);
+    // créais un opérateur pour le total produit grâce au dataset
+    totalPrix += cart.dataset.quantite * cart.dataset.prix;
+  });
+  //endroit d'affichage nombre d'article
+  document.getElementById('totalQuantity').textContent = totalArticle;
+  //endroit d'affichage du prix total
+  document.getElementById('totalPrice').textContent = totalPrix;
 }
