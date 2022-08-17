@@ -53,7 +53,7 @@ produitDisplay();
 //------------------------------------------------------------------------
 // définition des variables
 let choixQuantité = document.querySelector('input[id="quantity"]');
-let quantitéProduit = 1;
+let quantitéProduit = 1
 // On écoute ce qu'il se passe dans input[name="itemQuantity"]
 choixQuantité.addEventListener('input', (eq) => {
   // on récupère la valeur de la cible de l'évenement dans couleur
@@ -81,9 +81,9 @@ const addKanap = () => {
       quantite: `${quantitéProduit}`,
     });
 
-    console.log(select.value);
     //condition pour creer le storage (premiere fois)
-    if (produitStorage == null && select.value != '') {
+    if (produitStorage == null && select.value != "") {
+      console.log(select.value);
       produitStorage = [];
       //envoie les info produit au local storage
       produitStorage.push(fusionProduitColor);
@@ -107,9 +107,7 @@ const addKanap = () => {
             (produitStorage[i].quantite = quantitéProduit),
             console.log('quantite++'),
             localStorage.setItem('produit', JSON.stringify(produitStorage)),
-            (produitStorage = JSON.parse(localStorage.getItem('produit'))),
-            alert('Quantite ajouté au panier'),
-            (select.value = '')
+            (produitStorage = JSON.parse(localStorage.getItem('produit')))
           );
         }
       }
@@ -124,9 +122,7 @@ const addKanap = () => {
             console.log('nouveau'),
             produitStorage.push(fusionProduitColor),
             localStorage.setItem('produit', JSON.stringify(produitStorage)),
-            (produitStorage = JSON.parse(localStorage.getItem('produit'))),
-            alert('Nouveau Produit ajouté aux panier'),
-            (select.value = '')
+            (produitStorage = JSON.parse(localStorage.getItem('produit')))
           );
         }
       }

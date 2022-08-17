@@ -10,8 +10,9 @@ const panierDisplay = async () => {
     //add produit existant alors creation des cart avec les produit du localstorage
     const cart = document.getElementById('cart__items');
 
-    cart.innerHTML = addProduit.map(
-      (produit) => `
+    cart.innerHTML = addProduit
+      .map(
+        (produit) => `
     <article class="cart__item" data-id="${produit._id}" data-color="${produit.colorsChoisi}" data-quantite="${produit.quantite}" data-prix="${produit.price}">
         <div class="cart__item__img">
             <img src=${produit.imageUrl} alt=${produit.altTxt}>
@@ -33,7 +34,8 @@ const panierDisplay = async () => {
             </div>
         </div>
     </article> `
-    );
+      )
+      .join('');
   } else {
     //si panier vide
     document.querySelector('h1').innerHTML =
@@ -41,6 +43,7 @@ const panierDisplay = async () => {
   }
   // reste à l'écoute grâce aux fonctions suivantes pour modifier l'affichage
   modifQuantité();
+  removeProduct();
   totalProduit();
 };
 panierDisplay();
@@ -73,22 +76,36 @@ function modifQuantité() {
   });
 }
 
-
 // fonction supprimer un produit
+const removeProduct = async (panierDisplay) => {
+  await panierDisplay;
+  let itemDeleted = document.querySelectorAll('.deleteItem');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+  itemDeleted.forEach((corbeille) => {
+    corbeille.addEventListener('click', () => {
+      let totalAddProduitRemove = addProduit.length;
+      if (totalAddProduitRemove == 1) {
+        return (
+          localStorage.removeItem('produit'),
+          (location.href = 'cart.html'),
+          alert('Article supprimer du panier')
+        );
+      } else {
+        someProduct = addProduit.filter((el) => {
+          if (
+            corbeille.dataset.id != el._id ||
+            corbeille.dataset.color != el.colorsChoisi
+          ) {
+            return true;
+          }
+        });
+        localStorage.setItem('produit', JSON.stringify(someProduct));
+        totalProduit()((location.href = 'cart.html'));
+      }
+    });
+  });
+  return;
+};
 
 // fonction ajout nombre total produit et coût total
 
