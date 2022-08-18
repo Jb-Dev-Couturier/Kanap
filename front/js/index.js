@@ -1,7 +1,10 @@
 // variable kanap tableau vide
 let KanapsData = [];
 
+
+//------------------------------------------------------------------------
 //requete API (fetch)
+//------------------------------------------------------------------------
 const fetchKanap = async () => {
   await fetch('http://localhost:3000/api/products')
     //renvoi reponse en promise traite en json
@@ -14,7 +17,10 @@ const fetchKanap = async () => {
     });
 };
 
+
+//------------------------------------------------------------------------
 //function affichage des Kanap
+//------------------------------------------------------------------------
 
 const kanapDisplay = async () => {
     //attendre la reponse de fetchKanap

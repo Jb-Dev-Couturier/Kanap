@@ -4,7 +4,11 @@ const produit = window.location.search.split('?_id=').join('');
 //creation tableau pour stocker element recuperer
 let produitData = [];
 
+
+
+//------------------------------------------------------------------------
 //recupere info du produit en BD avec la variable 'produit' qui contient l'id du produit
+//------------------------------------------------------------------------
 const fetchProduit = async () => {
   await fetch(`http://localhost:3000/api/products/${produit}`)
     //renvoi reponse en promise traite en json
@@ -14,7 +18,10 @@ const fetchProduit = async () => {
     });
 };
 
+
+//------------------------------------------------------------------------
 //afficher le produit en inner html
+//------------------------------------------------------------------------
 
 const produitDisplay = async () => {
   await fetchProduit();
@@ -30,7 +37,10 @@ const produitDisplay = async () => {
   description.textContent = `${produitData.description}`;
   button.innerHTML = `<button id="${produitData._id}" >Ajouter au panier</button>`;
 
+  //-------------------------------------------------------------------------
   //pour le choix des couleurs
+  //------------------------------------------------------------------------
+
   let select = document.getElementById('colors');
 
   //recupere les different couleur disponible
@@ -64,7 +74,13 @@ choixQuantité.addEventListener('input', (eq) => {
   console.log(quantitéProduit);
 });
 
+
+
+
+//-------------------------------------------------------------------------
 //add produit aux local storage
+//------------------------------------------------------------------------
+
 const addKanap = () => {
   //cible boutton 'ajouter au panier'
   let bouton = document.getElementById(produitData._id);

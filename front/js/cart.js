@@ -1,6 +1,9 @@
 //Recupere les info du local storage
 let addProduit = JSON.parse(localStorage.getItem('produit'));
 
+//------------------------------------------------------------------------
+//creation panier avec donnée local storage
+//------------------------------------------------------------------------
 const panierDisplay = async () => {
   //add produit est il existant ou null
   if (addProduit) {
@@ -36,19 +39,21 @@ const panierDisplay = async () => {
     </article> `
       )
       .join('');
-      modifQuantité();
-      removeProduct();
-      totalProduit();
+    // reste à l'écoute grâce aux fonctions suivantes pour modifier l'affichage
+    modifQuantité();
+    removeProduct();
+    totalProduit();
   } else {
     //si panier vide
     document.querySelector('h1').innerHTML =
       "Vous n'avez pas d'article dans votre panier";
   }
-  // reste à l'écoute grâce aux fonctions suivantes pour modifier l'affichage
 };
 panierDisplay();
 
-// fonction modifQuantité, modifie dynamiquement les quantités du panier
+//------------------------------------------------------------------------
+// fonction modifQuantité
+//------------------------------------------------------------------------
 
 function modifQuantité() {
   const cart = document.querySelectorAll('.cart__item');
@@ -76,7 +81,9 @@ function modifQuantité() {
   });
 }
 
+//------------------------------------------------------------------------
 // fonction supprimer un produit
+//------------------------------------------------------------------------
 const removeProduct = async (panierDisplay) => {
   await panierDisplay;
   let itemDeleted = document.querySelectorAll('.deleteItem');
@@ -84,12 +91,10 @@ const removeProduct = async (panierDisplay) => {
   itemDeleted.forEach((corbeille) => {
     corbeille.addEventListener('click', () => {
       if (window.confirm('Voulez vous supprimer cet article?')) {
-        
         let totalAddProduitRemove = addProduit.length;
         if (totalAddProduitRemove == 1) {
           return (
-            localStorage.removeItem('produit'),
-            (location.href = 'cart.html')
+            localStorage.removeItem('produit'), (location.href = 'cart.html')
           );
         } else {
           someProduct = addProduit.filter((el) => {
@@ -100,16 +105,18 @@ const removeProduct = async (panierDisplay) => {
               return true;
             }
           });
-      }
+        }
         localStorage.setItem('produit', JSON.stringify(someProduct));
-        totalProduit()((location.href = 'cart.html'));
+        totalProduit()((location.href = 'panier.html'));
       }
     });
   });
   return;
 };
 
+//------------------------------------------------------------------------
 // fonction ajout nombre total produit et coût total
+//------------------------------------------------------------------------
 
 function totalProduit() {
   // déclaration variable en tant que nombre
@@ -130,3 +137,160 @@ function totalProduit() {
   //endroit d'affichage du prix total
   document.getElementById('totalPrice').textContent = totalPrix;
 }
+
+//------------------------------------------------------------------------
+// Formulaire de contact
+//------------------------------------------------------------------------
+
+const prenom = document.getElementById('firstName');
+const nom = document.getElementById('lastName');
+const adresse = document.getElementById('address');
+const ville = document.getElementById('city');
+const email = document.getElementById('email');
+
+let valuePrenom, valueNom, valueEmail, valueAdresse, valueVille;
+
+//------------------------------------------------------------------------
+// Prenom
+//------------------------------------------------------------------------
+
+prenom.addEventListener('input', function (e) {
+  valuePrenom;
+  if (e.target.value.length == 0) {
+    firstNameErrorMsg.classList.add('opacity');
+    firstNameErrorMsg.innerHTML = '.';
+    valuePrenom = null;
+  } else if (e.target.value.length < 3 || e.target.length > 25) {
+    firstNameErrorMsg.classList.remove('opacity');
+    firstNameErrorMsg.innerHTML = `Doit Contenir entre 3 et 25 caractères`;
+    valuePrenom = null;
+  }
+  if (e.target.value.match(/^[a-z A-Z]{3,25}$/)) {
+    firstNameErrorMsg.classList.add('opacity');
+    firstNameErrorMsg.innerHTML = '.';
+    valuePrenom = e.target.value;
+  }
+  if (
+    !e.target.value.match(/^[a-z A-Z]{3,25}$/) &&
+    e.target.value.length > 3 &&
+    e.target.value.length < 25
+  ) {
+    firstNameErrorMsg.classList.remove('opacity');
+    firstNameErrorMsg.innerHTML = 'Pas de caracteres ou de chiffres';
+    valuePrenom = null;
+  }
+});
+
+//------------------------------------------------------------------------
+// Nom
+//------------------------------------------------------------------------
+nom.addEventListener('input', function (e) {
+  valueNom;
+  if (e.target.value.length == 0) {
+    lastNameErrorMsg.classList.add('opacity');
+    lastNameErrorMsg.innerHTML = '.';
+    valueNom = null;
+  } else if (e.target.value.length < 3 || e.target.length > 25) {
+    lastNameErrorMsg.classList.remove('opacity');
+    lastNameErrorMsg.innerHTML = `Doit Contenir entre 3 et 25 caractères`;
+    valueNom = null;
+  }
+  if (e.target.value.match(/^[a-z A-Z]{3,25}$/)) {
+    lastNameErrorMsg.classList.add('opacity');
+    lastNameErrorMsg.innerHTML = '.';
+    valueNom = e.target.value;
+  }
+  if (
+    !e.target.value.match(/^[a-z A-Z]{3,25}$/) &&
+    e.target.value.length > 3 &&
+    e.target.value.length < 25
+  ) {
+    lastNameErrorMsg.classList.remove('opacity');
+    lastNameErrorMsg.innerHTML = 'Pas de caracteres ou de chiffres';
+    valueNom = null;
+  }
+});
+
+//------------------------------------------------------------------------
+// Address
+//------------------------------------------------------------------------
+adresse.addEventListener('input', function (e) {
+  valueAdresse;
+  if (e.target.value.length == 0) {
+    addressErrorMsg.classList.add('opacity');
+    addressErrorMsg.innerHTML = '.';
+    valueAdresse = null;
+  } else if (e.target.value.length < 3 || e.target.length > 35) {
+    addressErrorMsg.classList.remove('opacity');
+    addressErrorMsg.innerHTML = `Doit Contenir entre 3 et 35 caractères`;
+    valueAdresse = null;
+  }
+  if (e.target.value.match(/^[0-9]{1,6} [a-z A-Z]{3,35}$/)) {
+    addressErrorMsg.classList.add('opacity');
+    addressErrorMsg.innerHTML = '.';
+    valueAdresse = e.target.value;
+  }
+  if (
+    !e.target.value.match(/^[0-9]{1,6} [a-z A-Z]{3,35}$/) &&
+    e.target.value.length > 3 &&
+    e.target.value.length < 35
+  ) {
+    addressErrorMsg.classList.remove('opacity');
+    addressErrorMsg.innerHTML = 'Adresse invalide : 123 chemin...';
+    valueAdresse = null;
+  }
+});
+
+//------------------------------------------------------------------------
+// Ville
+//------------------------------------------------------------------------
+ville.addEventListener('input', function (e) {
+  valueVille;
+  if (e.target.value.length == 0) {
+    cityErrorMsg.classList.add('opacity');
+    cityErrorMsg.innerHTML = '.';
+    valueVille = null;
+  } else if (e.target.value.length < 3 || e.target.length > 25) {
+    cityErrorMsg.classList.remove('opacity');
+    cityErrorMsg.innerHTML = `Doit Contenir entre 3 et 25 caractères`;
+    valueVille = null;
+  }
+  if (e.target.value.match(/^[a-z A-Z]{3,25}$/)) {
+    cityErrorMsg.classList.add('opacity');
+    cityErrorMsg.innerHTML = '.';
+    valueVille = e.target.value;
+  }
+  if (
+    !e.target.value.match(/^[a-z A-Z]{3,25}$/) &&
+    e.target.value.length > 3 &&
+    e.target.value.length < 25
+  ) {
+    cityErrorMsg.classList.remove('opacity');
+    cityErrorMsg.innerHTML = 'Pas de caracteres ou de chiffres';
+    valueVille = null;
+  }
+});
+
+//------------------------------------------------------------------------
+// Email
+//------------------------------------------------------------------------
+email.addEventListener('input', (e) => {
+  if (e.target.value.length == 0) {
+    emailErrorMsg.classList.add('opacity');
+    emailErrorMsg.innerHTML = '.';
+    valueEmail = null;
+  } else if (e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+    emailErrorMsg.classList.add('opacity');
+    emailErrorMsg.innerHTML = '.';
+    valueEmail = e.target.value;
+    console.log(valueEmail);
+  }
+  if (
+    !e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) &&
+    !e.target.value.length == 0
+  ) {
+    emailErrorMsg.classList.remove('opacity');
+    emailErrorMsg.innerHTML = 'Email Incorrect ex: Kanap@gmail.com';
+    valueEmail = null;
+  }
+});
