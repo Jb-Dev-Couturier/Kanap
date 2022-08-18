@@ -148,6 +148,8 @@ const adresse = document.getElementById('address');
 const ville = document.getElementById('city');
 const email = document.getElementById('email');
 
+
+
 let valuePrenom, valueNom, valueEmail, valueAdresse, valueVille;
 
 //------------------------------------------------------------------------
@@ -294,3 +296,49 @@ email.addEventListener('input', (e) => {
     valueEmail = null;
   }
 });
+
+
+//------------------------------------------------------------------------
+// Ecoute du formulaire pour envoie info API
+//------------------------------------------------------------------------
+
+
+
+formulaireContact.addEventListener('submit',async (e) => {
+  e.preventDefault();
+  
+
+  if (valuePrenom && valueNom && valueEmail && valueVille && valueAdresse) {
+    
+    const commandeFinal = JSON.parse(localStorage.getItem('produit'));
+    let commandeId = [];
+    console.log(commandeFinal);
+    console.log(commandeId);
+
+   await commandeFinal.forEach((commande) => {
+      commandeId.push([ commande._id, commande.colorsChoisi, commande.quantite]);
+    });
+console.log(commandeId);
+    const data = {
+      contact: {
+        firstName: valuePrenom,
+        lastName: valueNom,
+        address: valueAdresse,
+        city: valueVille,
+        email: valueEmail,
+      },
+      products: {
+        commandeId
+      },
+    };
+    console.log(data);
+  } else {
+    alert('Remplir le formulaire correctement');
+  }
+});
+
+
+//------------------------------------------------------------------------
+// formulaire Requete API
+//------------------------------------------------------------------------
+
