@@ -1,3 +1,5 @@
+//variable
+let commandeProducts = JSON.parse(localStorage.getItem('commandes'));
 //Recupere les info du local storage
 let addProduit = JSON.parse(localStorage.getItem('produit'));
 
@@ -107,7 +109,7 @@ const removeProduct = async (panierDisplay) => {
           });
         }
         localStorage.setItem('produit', JSON.stringify(someProduct));
-        totalProduit()((location.href = 'panier.html'));
+        totalProduit()((location.href = 'cart.html'));
       }
     });
   });
@@ -147,8 +149,6 @@ const nom = document.getElementById('lastName');
 const adresse = document.getElementById('address');
 const ville = document.getElementById('city');
 const email = document.getElementById('email');
-
-
 
 let valuePrenom, valueNom, valueEmail, valueAdresse, valueVille;
 
@@ -297,28 +297,23 @@ email.addEventListener('input', (e) => {
   }
 });
 
-
 //------------------------------------------------------------------------
 // Ecoute du formulaire pour envoie info API
 //------------------------------------------------------------------------
 
-
-
-formulaireContact.addEventListener('submit',async (e) => {
+formulaireContact.addEventListener('submit', async (e) => {
   e.preventDefault();
-  
 
   if (valuePrenom && valueNom && valueEmail && valueVille && valueAdresse) {
-    
     const commandeFinal = JSON.parse(localStorage.getItem('produit'));
     let commandeId = [];
     console.log(commandeFinal);
     console.log(commandeId);
 
-   await commandeFinal.forEach((commande) => {
-      commandeId.push([ commande._id, commande.colorsChoisi, commande.quantite]);
+    await commandeFinal.forEach((commande) => {
+      commandeId.push(commande._id); //voir ajout: quantite ,choix couleur 
     });
-console.log(commandeId);
+    console.log(commandeId);
     const data = {
       contact: {
         firstName: valuePrenom,
@@ -327,18 +322,44 @@ console.log(commandeId);
         city: valueVille,
         email: valueEmail,
       },
-      products: {
-        commandeId
-      },
+      products: commandeId,
     };
     console.log(data);
+
+    //------------------------------------------------------------------------
+    // formulaire envoi Requete API + redirection confirmation .html
+    //------------------------------------------------------------------------
+
+    fetch('http://localhost:3000/api/products/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((promise) => {
+        let reponseServeur = promise;
+        console.log(reponseServeur);
+
+        const dataCommande = {
+          contact: reponseServeur.contact,
+          order: reponseServeur.orderId,
+        };
+
+        //
+        if (commandeProducts == null) {
+          commandeProducts = [];
+          commandeProducts.push(dataCommande);
+          localStorage.setItem('commandes', JSON.stringify(commandeProducts));
+        } else if (commandeProducts != null) {
+          commandeProducts.push(dataCommande);
+          localStorage.setItem('commandes', JSON.stringify(commandeProducts));
+        }
+        localStorage.removeItem('produit');
+        window.location.href = `/front/html/confirmation.html?commande=${reponseServeur.orderId}`;
+      });
   } else {
     alert('Remplir le formulaire correctement');
   }
 });
 
-
-//------------------------------------------------------------------------
-// formulaire Requete API
-//------------------------------------------------------------------------
-
+console.log(commandeProducts);
