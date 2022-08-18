@@ -172,13 +172,13 @@ prenom.addEventListener('input', function (e) {
     firstNameErrorMsg.innerHTML = `Doit Contenir entre 3 et 25 caractères`;
     valuePrenom = null;
   }
-  if (e.target.value.match(/^[a-z A-Z]{3,25}$/)) {
+  if (e.target.value.match(/^[a-zA-ZÀ-ÖØ-öø-ÿ]{3,25}$/)) {
     firstNameErrorMsg.classList.add('opacity');
     firstNameErrorMsg.innerHTML = '.';
     valuePrenom = e.target.value;
   }
   if (
-    !e.target.value.match(/^[a-z A-Z]{3,25}$/) &&
+    !e.target.value.match(/^[a-zA-ZÀ-ÖØ-öø-ÿ]{3,25}$/) &&
     e.target.value.length > 3 &&
     e.target.value.length < 25
   ) {
@@ -202,13 +202,13 @@ nom.addEventListener('input', function (e) {
     lastNameErrorMsg.innerHTML = `Doit Contenir entre 3 et 25 caractères`;
     valueNom = null;
   }
-  if (e.target.value.match(/^[a-z A-Z]{3,25}$/)) {
+  if (e.target.value.match(/^[a-zA-ZÀ-ÖØ-öø-ÿ]{3,25}$/)) {
     lastNameErrorMsg.classList.add('opacity');
     lastNameErrorMsg.innerHTML = '.';
     valueNom = e.target.value;
   }
   if (
-    !e.target.value.match(/^[a-z A-Z]{3,25}$/) &&
+    !e.target.value.match(/^[a-zA-ZÀ-ÖØ-öø-ÿ]{3,25}$/) &&
     e.target.value.length > 3 &&
     e.target.value.length < 25
   ) {
@@ -232,13 +232,13 @@ adresse.addEventListener('input', function (e) {
     addressErrorMsg.innerHTML = `Doit Contenir entre 3 et 35 caractères`;
     valueAdresse = null;
   }
-  if (e.target.value.match(/^[0-9]{1,6} [a-z A-Z]{3,35}$/)) {
+  if (e.target.value.match(/^[0-9]{1,6} [a-zA-ZÀ-ÖØ-öø-ÿ]{3,35}$/)) {
     addressErrorMsg.classList.add('opacity');
     addressErrorMsg.innerHTML = '.';
     valueAdresse = e.target.value;
   }
   if (
-    !e.target.value.match(/^[0-9]{1,6} [a-z A-Z]{3,35}$/) &&
+    !e.target.value.match(/^[0-9]{1,6} [a-zA-ZÀ-ÖØ-öø-ÿ]{3,35}$/) &&
     e.target.value.length > 3 &&
     e.target.value.length < 35
   ) {
@@ -262,13 +262,13 @@ ville.addEventListener('input', function (e) {
     cityErrorMsg.innerHTML = `Doit Contenir entre 3 et 25 caractères`;
     valueVille = null;
   }
-  if (e.target.value.match(/^[a-z A-Z]{3,25}$/)) {
+  if (e.target.value.match(/^[a-zA-ZÀ-ÖØ-öø-ÿ]{3,25}$/)) {
     cityErrorMsg.classList.add('opacity');
     cityErrorMsg.innerHTML = '.';
     valueVille = e.target.value;
   }
   if (
-    !e.target.value.match(/^[a-z A-Z]{3,25}$/) &&
+    !e.target.value.match(/^[a-zA-ZÀ-ÖØ-öø-ÿ]{3,25}$/) &&
     e.target.value.length > 3 &&
     e.target.value.length < 25
   ) {
