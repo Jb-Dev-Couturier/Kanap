@@ -339,7 +339,7 @@ formulaireContact.addEventListener('submit', async (e) => {
     //------------------------------------------------------------------------
 
         //method 'post' pour envoyer au back avec les argument attendu
-    fetch('http://localhost:3000/api/products/order', {
+    fetch(`${apiUrl}/api/products/order`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -348,8 +348,8 @@ formulaireContact.addEventListener('submit', async (e) => {
       //stock la reponse obtenu du serveur dans promise
       .then((promise) => {
         let reponseServeur = promise;
-           
-          //stock la reponse en variable avec ses arguments
+
+        //stock la reponse en variable avec ses arguments
         const dataCommande = {
           contact: reponseServeur.contact,
           order: reponseServeur.orderId,

@@ -10,7 +10,7 @@ let produitData = [];
 //recupere info du produit en BD avec la variable 'produit' qui contient l'id du produit
 //------------------------------------------------------------------------
 const fetchProduit = async () => {
-  await fetch(`http://localhost:3000/api/products/${produit}`)
+  await fetch(`${apiUrl}/api/products/${produit}`)
     //renvoi reponse en promise traite en json
     .then((res) => res.json())
     .then((promise) => {
