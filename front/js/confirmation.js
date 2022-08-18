@@ -5,19 +5,18 @@ let commandeProducts = JSON.parse(localStorage.getItem('commandes'));
 //------------------------------------------------------------
 
 const Commande = async ()=>{
+  //S
+  if (commandeProducts) {
+    await commandeProducts;
+    console.log(commandeProducts);
+    const order = document.getElementById('orderId');
 
-    if (commandeProducts){
-        await commandeProducts
-        console.log(commandeProducts);
-        const order = document.getElementById('orderId');
-
-        order.innerHTML = commandeProducts
-          .map((commande) => `<br>${commande.order}<br>Merci pour votre achat`)
-          sessionStorage.clear();
-          localStorage.clear();
-    }
-
-
+    order.innerHTML = commandeProducts.map(
+      (commande) => `<br>${commande.order}<br>Merci pour votre achat`
+    );
+    sessionStorage.clear();
+    localStorage.clear();
+  }
 }
 Commande();
 

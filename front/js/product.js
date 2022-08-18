@@ -98,7 +98,7 @@ const addKanap = () => {
     });
 
     //condition pour creer le storage (premiere fois)
-    if (produitStorage == null && select.value != "") {
+    if (produitStorage == null && select.value != '' && quantitéProduit >0) {
       console.log(select.value);
       produitStorage = [];
       //envoie les info produit au local storage
@@ -110,7 +110,7 @@ const addKanap = () => {
       select.value = '';
 
       //Modifie la quantite voulu du produit avec le meme colorie
-    } else if (produitStorage != null && select.value != '') {
+    } else if (produitStorage != null && select.value != '' && quantitéProduit > 0) {
       //boucle dans les produit local storage
       for (i = 0; i < produitStorage.length; i++) {
         if (
@@ -145,7 +145,7 @@ const addKanap = () => {
         }
       }
     } else {
-      alert('Selectionner une couleur SVP');
+      alert('Selectionner une couleur SVP et/ou une valeur valide (1-100)');
     }
   });
   return (produitStorage = JSON.parse(localStorage.getItem('produit')));

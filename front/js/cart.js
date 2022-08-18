@@ -17,6 +17,7 @@ const panierDisplay = async () => {
 
     cart.innerHTML = addProduit
       .map(
+        //inject la carte en DOM par JS
         (produit) => `
     <article class="cart__item" data-id="${produit._id}" data-color="${produit.colorsChoisi}" data-quantite="${produit.quantite}" data-prix="${produit.price}">
         <div class="cart__item__img">
@@ -69,7 +70,8 @@ function modifQuantité() {
       for (article of panier)
         if (
           article._id === cart.dataset.id &&
-          cart.dataset.color === article.colorsChoisi
+          cart.dataset.color === article.colorsChoisi &&
+          eq.target.value > 0
         ) {
           article.quantite = eq.target.value;
           console.log(article.quantite);
@@ -78,6 +80,9 @@ function modifQuantité() {
           cart.dataset.quantite = eq.target.value;
           // on joue la fonction pour actualiser les données
           totalProduit();
+        }else{
+          alert('Indiquez des quantités Valide SVP')
+          eq.target.value = 1
         }
     });
   });
@@ -303,17 +308,20 @@ email.addEventListener('input', (e) => {
 
 formulaireContact.addEventListener('submit', async (e) => {
   e.preventDefault();
-
+    //condition formulaire remplie
   if (valuePrenom && valueNom && valueEmail && valueVille && valueAdresse) {
     const commandeFinal = JSON.parse(localStorage.getItem('produit'));
+
+    //creation tableau de ma commande
     let commandeId = [];
     console.log(commandeFinal);
     console.log(commandeId);
-
+    //Push info commande final dans commandId
     await commandeFinal.forEach((commande) => {
       commandeId.push(commande._id); //voir ajout: quantite ,choix couleur 
     });
     console.log(commandeId);
+    //stocker les info cree dans data pour envoie API par method Post
     const data = {
       contact: {
         firstName: valuePrenom,
@@ -330,22 +338,24 @@ formulaireContact.addEventListener('submit', async (e) => {
     // formulaire envoi Requete API + redirection confirmation .html
     //------------------------------------------------------------------------
 
+        //method 'post' pour envoyer au back avec les argument attendu
     fetch('http://localhost:3000/api/products/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
+      //stock la reponse obtenu du serveur dans promise
       .then((promise) => {
         let reponseServeur = promise;
-        console.log(reponseServeur);
-
+           
+          //stock la reponse en variable avec ses arguments
         const dataCommande = {
           contact: reponseServeur.contact,
           order: reponseServeur.orderId,
         };
 
-        //
+        //creation local storage de dataCommande
         if (commandeProducts == null) {
           commandeProducts = [];
           commandeProducts.push(dataCommande);
@@ -354,6 +364,7 @@ formulaireContact.addEventListener('submit', async (e) => {
           commandeProducts.push(dataCommande);
           localStorage.setItem('commandes', JSON.stringify(commandeProducts));
         }
+        //renvoie vers la page confirmation
         localStorage.removeItem('produit');
         window.location.href = `/front/html/confirmation.html?commande=${reponseServeur.orderId}`;
       });
