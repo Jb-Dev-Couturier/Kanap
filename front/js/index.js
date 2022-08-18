@@ -6,7 +6,7 @@ let KanapsData = [];
 //requete API (fetch)
 //------------------------------------------------------------------------
 const fetchKanap = async () => {
-  await fetch('http://localhost:3000/api/products')
+  await fetch(`${apiUrl}/api/products`)
     //renvoi reponse en promise traite en json
     .then((res) => res.json())
     //traite la promise
