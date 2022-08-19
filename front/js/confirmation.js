@@ -1,26 +1,24 @@
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Variable
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 let commandeProducts = JSON.parse(localStorage.getItem('commandes'));
 
-//------------------------------------------------------------
-// fonction affichage autoinvoquée du numéro de commande et vide du storage
-//------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////////////////////
+// fonction affichage du numéro de commande et vide du storage
+//////////////////////////////////////////////////////////////////////////////////////////////-
 
-const Commande = async ()=>{
-  //S
+const Commande = async () => {
   if (commandeProducts) {
     await commandeProducts;
-    console.log(commandeProducts);
     const order = document.getElementById('orderId');
 
     order.innerHTML = commandeProducts.map(
-      (commande) => `<br>${commande.order}<br>Merci pour votre achat`
+      (commande) =>
+        `<br>${commande.order}<br>Merci pour votre achat <br> A trés bientot`
     );
     sessionStorage.clear();
     localStorage.clear();
   }
-}
+};
 Commande();
-
-
-
-
-//`<br>${numCom}<br>Merci pour votre achat`;

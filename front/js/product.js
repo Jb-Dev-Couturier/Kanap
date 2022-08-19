@@ -1,152 +1,180 @@
-//recupere l'adresse html avec l'id puis split '?_id=' et '._id' pour recuperere juste ._id
+//////////////////////////////////////////////////////////////////////////////////////////////
+// variable 
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 const produit = window.location.search.split('?_id=').join('');
+// Récupération de l'id du produit
+const params = new URLSearchParams(document.location.search);
+//tableau donnee data
+let kanapClient = {};
+//tableau donne choix client
+let selectedKanap = {};
+//id du produit stocker en variable
+const id = params.get('_id');
+//article client est id du produit
+selectedKanap._id = id;
 
-//creation tableau pour stocker element recuperer
-let produitData = [];
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Récupération des produits de l'api et traitement des données
+//////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-//------------------------------------------------------------------------
-//recupere info du produit en BD avec la variable 'produit' qui contient l'id du produit
-//------------------------------------------------------------------------
 const fetchProduit = async () => {
   await fetch(`${apiUrl}/api/products/${produit}`)
     //renvoi reponse en promise traite en json
     .then((res) => res.json())
     .then((promise) => {
-      produitData = promise;
+      kanapClient = promise;
     });
 };
 
-
-//------------------------------------------------------------------------
-//afficher le produit en inner html
-//------------------------------------------------------------------------
-
+//////////////////////////////////////////////////////////////////////////////////////////////
+// fonction d'affichage
+//////////////////////////////////////////////////////////////////////////////////////////////
 const produitDisplay = async () => {
   await fetchProduit();
-
+  // déclaration des variables pointage des élémeconst
   const imageAlt = document.querySelector('article div.item__img');
   const titre = document.querySelector('#title');
   const prix = document.querySelector('#price');
   const description = document.querySelector('#description');
-  const button = document.querySelector('article div.item__content__addButton');
-  imageAlt.innerHTML = `<img src="${produitData.imageUrl}" alt="${produitData.altTxt}">`;
-  titre.textContent = `${produitData.name}`;
-  prix.textContent = `${produitData.price}`;
-  description.textContent = `${produitData.description}`;
-  button.innerHTML = `<button id="${produitData._id}" >Ajouter au panier</button>`;
+  const selectColor = document.querySelector('#colors');
 
-  //-------------------------------------------------------------------------
-  //pour le choix des couleurs
-  //------------------------------------------------------------------------
+  imageAlt.innerHTML = `<img src="${kanapClient.imageUrl}" alt="${kanapClient.altTxt}">`;
+  titre.textContent = `${kanapClient.name}`;
+  prix.textContent = `${kanapClient.price}`;
+  description.textContent = `${kanapClient.description}`;
 
-  let select = document.getElementById('colors');
-
-  //recupere les different couleur disponible
-  produitData.colors.forEach((color) => {
-    //cree un element option dans liste de selection
-    let tagOption = document.createElement('option');
-    //Injecte les valeur dans la variable tag option
-    tagOption.innerHTML = `${color}`;
-    tagOption.value = `${color}`;
-    //tagOption devient un enfant de select pour afficher les couleur disponible
-    select.appendChild(tagOption);
-  });
-  addKanap(produitData);
+  for (let couleur of kanapClient.colors) {
+    // ajout des balises d'option couleur avec leur valeur
+    selectColor.innerHTML += `<option value="${couleur}">${couleur}</option>`;
+  }
 };
-
 produitDisplay();
 
-//-------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////////////////////
+// choix couleur dynamique
+//////////////////////////////////////////////////////////////////////////////////////////////
+let choixCouleur = document.querySelector('#colors');
+// On écoute ce qu'il se passe dans #colors
+choixCouleur.addEventListener('input', (ec) => {
+  let couleurProduit;
+  // on récupère la valeur de la cible de l'évenement dans couleur
+  couleurProduit = ec.target.value;
+  // on ajoute la couleur à l'objet panierClient
+  selectedKanap.couleur = couleurProduit;
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 // choix quantité dynamique
-//------------------------------------------------------------------------
-// définition des variables
+//////////////////////////////////////////////////////////////////////////////////////////////
 let choixQuantité = document.querySelector('input[id="quantity"]');
-let quantitéProduit = 1
+let quantitéProduit;
 // On écoute ce qu'il se passe dans input[name="itemQuantity"]
 choixQuantité.addEventListener('input', (eq) => {
   // on récupère la valeur de la cible de l'évenement dans couleur
   quantitéProduit = eq.target.value;
   // on ajoute la quantité à l'objet panierClient
-  produitData.quantite = quantitéProduit;
-
-  console.log(quantitéProduit);
+  selectedKanap.quantité = quantitéProduit;
 });
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// conditions de validation du clic via le bouton ajouter au panier
+//////////////////////////////////////////////////////////////////////////////////////////////
+// déclaration variable
+let choixProduit = document.querySelector('#addToCart');
+// On écoute ce qu'il se passe sur le bouton #addToCart pour faire l'action :
+choixProduit.addEventListener('click', () => {
+  //conditions
+  if (
+    // valeurs créées dynamiquement au click (voir choix quantite et choix couleur)
+    selectedKanap.quantité < 1 ||
+    selectedKanap.quantité > 100 ||
+    selectedKanap.quantité === undefined ||
+    selectedKanap.couleur === '' ||
+    selectedKanap.couleur === undefined
+  ) {
+    alert(
+      'Veuillez renseigner une couleur, et/ou une quantité valide (1 et 100)'
+    );
+  } else {
+    //appel fonction si condition ok
+    addKanapPanier();
+  }
+});
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Déclaration de tableaux pour modifier valeur choisi
+//////////////////////////////////////////////////////////////////////////////////////////////
 
+// tableau localstorage
+let produitsEnregistrés = [];
+// valeur modifier avant ajout localstorage
+let produitsTemporaires = [];
+//choix client
+let produitChoisi = [];
+// tableau final pour local storage
+let produitsFinal = [];
 
-//-------------------------------------------------------------------------
-//add produit aux local storage
-//------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////////////////////
+// fonction addKanap
+//////////////////////////////////////////////////////////////////////////////////////////////
+function addKanap() {
+  //si produitsEnregistrés
+  if (produitsEnregistrés === null) {
+    // pousse le produit choisit
+    produitChoisi.push(selectedKanap);
+    // envoi local storage
+    return (
+      (localStorage.produitStorage = JSON.stringify(produitChoisi)),
+      alert('Votre article a été ajouter au panier MERCI !')
+    );
+  }
+}
 
-const addKanap = () => {
-  //cible boutton 'ajouter au panier'
-  let bouton = document.getElementById(produitData._id);
-  //ecoute du click
-  bouton.addEventListener('click', () => {
-    //variable avec contenu du local storage
-    let produitStorage = JSON.parse(localStorage.getItem('produit'));
-    //a l'ecoute cible color et quantity
-    let select = document.getElementById('colors');
+//////////////////////////////////////////////////////////////////////////////////////////////
+// fonction addNewKanap
+//////////////////////////////////////////////////////////////////////////////////////////////
+function addNewKanap() {
+  // vide produitsFinal
+  produitsFinal = [];
+  //recupere data de selectedKanap (ancienn donnee client)
+  produitsTemporaires.push(selectedKanap);
+  //additione ancienne data avec nouvelle data
+  produitsFinal = [...produitsEnregistrés, ...produitsTemporaires];
+  // vide produitsTemporaires
+  produitsTemporaires = [];
+  // envoi local storage
+  return (
+    (localStorage.produitStorage = JSON.stringify(produitsFinal)),
+    alert('Votre article a été ajouter au panier MERCI !')
+  );
+}
 
-    //ajoutez un objet  couleur et quantité a produitdata
-    const fusionProduitColor = Object.assign({}, produitData, {
-      colorsChoisi: `${select.value}`,
-      quantite: `${quantitéProduit}`,
-    });
-
-    //condition pour creer le storage (premiere fois)
-    if (produitStorage == null && select.value != '' && quantitéProduit >0) {
-      console.log(select.value);
-      produitStorage = [];
-      //envoie les info produit au local storage
-      produitStorage.push(fusionProduitColor);
-      console.log(produitStorage);
-      //ajout des donnes au local storage
-      localStorage.setItem('produit', JSON.stringify(produitStorage));
-      alert('Produit ajouté aux panier');
-      select.value = '';
-
-      //Modifie la quantite voulu du produit avec le meme colorie
-    } else if (produitStorage != null && select.value != '' && quantitéProduit > 0) {
-      //boucle dans les produit local storage
-      for (i = 0; i < produitStorage.length; i++) {
-        if (
-          //condition entre de boucle
-          produitStorage[i]._id == produitData._id &&
-          produitStorage[i].colorsChoisi == select.value
-        ) {
-          //si produit + couleur identique alors modifie la quantité
-          return (
-            (produitStorage[i].quantite = quantitéProduit),
-            console.log('quantite++'),
-            localStorage.setItem('produit', JSON.stringify(produitStorage)),
-            (produitStorage = JSON.parse(localStorage.getItem('produit'))),
-            alert('Changement du nombre de produit')
-          );
-        }
+//////////////////////////////////////////////////////////////////////////////////////////////
+// fonction Panier
+//////////////////////////////////////////////////////////////////////////////////////////////
+function addKanapPanier() {
+  // variable produitStorage
+  produitsEnregistrés = JSON.parse(localStorage.getItem('produitStorage'));
+  // si produitEnregistrés
+  if (produitsEnregistrés) {
+    for (let choixClient of produitsEnregistrés) {
+      //compare si article existe dans le panier
+      if (
+        choixClient._id === id &&
+        choixClient.couleur === selectedKanap.couleur
+      ) {
+        alert('Vous aviez déja choisit cet article. Ajout de quantité modifié');
+        //additionne ancienne quantite avec nouvelle
+        let additionQuantité =
+          parseInt(choixClient.quantité) + parseInt(quantitéProduit);
+        choixClient.quantité = JSON.stringify(additionQuantité);
+        //envoi localStorage
+        return (localStorage.produitStorage =
+          JSON.stringify(produitsEnregistrés));
       }
-      //si produit ou couleur differente alors ajoute un nouvelle objet a localstorage
-      for (i = 0; i < produitStorage.length; i++) {
-        if (
-          (produitStorage[i]._id == produitData._id &&
-            produitStorage[i].colorsChoisi != select?.value) ||
-          produitStorage[i]._id != produitData._id
-        ) {
-          return (
-            console.log('nouveau'),
-            produitStorage.push(fusionProduitColor),
-            localStorage.setItem('produit', JSON.stringify(produitStorage)),
-            (produitStorage = JSON.parse(localStorage.getItem('produit'))),
-            alert('Nouveau Produit ajouté aux panier')
-          );
-        }
-      }
-    } else {
-      alert('Selectionner une couleur SVP et/ou une valeur valide (1-100)');
     }
-  });
-  return (produitStorage = JSON.parse(localStorage.getItem('produit')));
-};
+    return addNewKanap();
+  }
+  return addKanap();
+}
