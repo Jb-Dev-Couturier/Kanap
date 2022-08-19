@@ -111,22 +111,21 @@ function modifQuantité() {
       let panier = JSON.parse(localStorage.getItem('produitStorage'));
       // boucle pour modifier la quantité
       for (articleClient of panier)
-        if (
-          articleClient._id === cart.dataset.id &&
-          cart.dataset.couleur === articleClient.couleur &&
-          eq.target.value >= 1 &&
-          eq.target.value <= 100
-        ) {
+        if (articleClient._id === cart.dataset.id &&cart.dataset.couleur === articleClient.couleur &&eq.target.value >= 1 &&eq.target.value <= 100) {
+
           articleClient.quantité = eq.target.value;
           localStorage.produitStorage = JSON.stringify(panier);
           // on met à jour le dataset quantité
           cart.dataset.quantité = eq.target.value;
           // on joue la fonction pour actualiser les données
           totalProduit();
-        } else {
+
+          //si quantité non valide entre 1 et 100 c'est valid sinon
+        }else if (eq.target.value < 1 || eq.target.value > 100) {
           alert('Indiquez des quantités Valide SVP');
-          eq.target.value = articleClient.quantité;
+          eq.target.value = cart.dataset.quantité;
         }
+        
     });
   });
 }

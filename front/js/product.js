@@ -141,6 +141,18 @@ function addNewKanap() {
   produitsTemporaires.push(selectedKanap);
   //additione ancienne data avec nouvelle data
   produitsFinal = [...produitsEnregistrés, ...produitsTemporaires];
+
+  produitsFinal.sort(function triage(a, b) {
+    if (a._id < b._id) return -1;
+    if (a._id > b._id) return 1;
+    if ((a._id = b._id)) {
+      if (a.couleur < b.couleur) return -1;
+      if (a.couleur > b.couleur) return 1;
+    }
+    return 0;
+  });
+
+
   // vide produitsTemporaires
   produitsTemporaires = [];
   // envoi local storage
