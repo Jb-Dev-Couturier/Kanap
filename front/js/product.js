@@ -38,12 +38,14 @@ const produitDisplay = async () => {
   const prix = document.querySelector('#price');
   const description = document.querySelector('#description');
   const selectColor = document.querySelector('#colors');
+  let newTitlePage = document.querySelector('title');
+  
 
   imageAlt.innerHTML = `<img src="${kanapClient.imageUrl}" alt="${kanapClient.altTxt}">`;
   titre.textContent = `${kanapClient.name}`;
   prix.textContent = `${kanapClient.price}`;
   description.textContent = `${kanapClient.description}`;
-
+  newTitlePage.textContent = `${kanapClient.name}`;
   for (let couleur of kanapClient.colors) {
     // ajout des balises d'option couleur avec leur valeur
     selectColor.innerHTML += `<option value="${couleur}">${couleur}</option>`;
