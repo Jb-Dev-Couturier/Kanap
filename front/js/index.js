@@ -26,7 +26,7 @@ async function creationProducts() {
             productLink.appendChild(productArticle);
 
             // Insertion de l'image
-            let productImg = document.createElement("img");
+            let productImg = document.createElement ("img");
             productArticle.appendChild(productImg);
             productImg.src = product[i].imageUrl;
             productImg.alt = product[i].altTxt;
