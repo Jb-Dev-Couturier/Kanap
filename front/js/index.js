@@ -1,42 +1,48 @@
-//////////////////////////////////////////////////////////////////////////////////////////////
-// variable 
-//////////////////////////////////////////////////////////////////////////////////////////////
-let KanapsData = [];
+//Récupération du tableau de produits disponibles
+getProducts();
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//requete API (fetch)
-//////////////////////////////////////////////////////////////////////////////////////////////
-const fetchKanap = async () => {
-  await fetch(`${apiUrl}/api/products`)
-    //renvoi reponse en promise traite en json
-    .then((res) => res.json())
-    //traite la promise
-    .then((promise) => {
-      //stock tableau promise dans kanapData
-      KanapsData = promise;
+
+//Création des articles via la liste récupérée précédemment
+creationProducts();
+
+async function getProducts() {
+    let products = await fetch(`${apiUrl}/api/products`);
+    console.log("Les produits ont été récupérés !")
+    return products.json();
+}
+
+async function creationProducts() {
+    let result = await getProducts()
+    .then( (product) => {
+        for (let i=0; i < product.length; i++) {		
+
+            // Insertion de l'élément "a"
+            let productLink = document.createElement("a");
+            document.querySelector(".items").appendChild(productLink);
+            productLink.href = `product.html?_id=${product[i]._id}`;
+
+            // Insertion de l'élément "article"
+            let productArticle = document.createElement("article");
+            productLink.appendChild(productArticle);
+
+            // Insertion de l'image
+            let productImg = document.createElement("img");
+            productArticle.appendChild(productImg);
+            productImg.src = product[i].imageUrl;
+            productImg.alt = product[i].altTxt;
+
+            // Insertion du titre "h3"
+            let productName = document.createElement("h3");
+            productArticle.appendChild(productName);
+            productName.classList.add("productName");
+            productName.innerHTML = product[i].name;
+
+            // Insertion de la description "p"
+            let productDescription = document.createElement("p");
+            productArticle.appendChild(productDescription);
+            productDescription.classList.add("productName");
+            productDescription.innerHTML = product[i].description;
+        }
     });
-};
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//function affichage des Kanap
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-const kanapDisplay = async () => {
-  //attendre la reponse de fetchKanap
-  await fetchKanap();
-  //recupere la div pour creation element kanap
-  //Creation boucle en fonction du nombre article en BD et recuperation des argument
-  document.getElementById('items').innerHTML += KanapsData.map(
-    (kanap) =>
-      `<a href="./product.html?_id=${kanap._id}">
-                <article>
-                <img src=${kanap.imageUrl} alt=${kanap.altTxt}>
-                <h3 class="productName">${kanap.name}</h3>
-                <p class="productDescription">Prix : ${kanap.price} €</p>
-                <p class="productDescription">${kanap.description}</p>
-                </article>
-            </a>`
-  ).join('');
-};
-
-kanapDisplay();
+    console.log("Les produits ont été crées !");
+}
