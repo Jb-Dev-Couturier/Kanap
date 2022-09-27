@@ -219,7 +219,7 @@ prenom.addEventListener('input', function (e) {
     firstNameErrorMsg.classList.add('opacity');
     firstNameErrorMsg.innerHTML = '.';
     valuePrenom = null;
-  } else if (e.target.value.length < 3 || e.target.length > 25) {
+  } else if (e.target.value.length < 2 || e.target.length > 25) {
     firstNameErrorMsg.classList.remove('opacity');
     firstNameErrorMsg.innerHTML = `Doit Contenir entre 3 et 25 caractères`;
     valuePrenom = null;
